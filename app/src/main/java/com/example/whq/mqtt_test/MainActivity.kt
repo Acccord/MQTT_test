@@ -64,20 +64,21 @@ class MainActivity : AppCompatActivity() {
         editor?.putString("client", clientStr)
         editor?.apply()
 
-        // 开始链接
-        val bean = ParamBean(ipStr, nameStr, pwdStr, topicStr, clientStr)
-        MqttHelper.get().connect(this, bean, object : ViMqttCallBack {
-            override fun onSuccess() {
-                Toast.makeText(this@MainActivity, "链接成功", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this@MainActivity, DataActivity::class.java))
-            }
-
-            override fun onFailure(exception: Throwable) {
-                Toast.makeText(this@MainActivity, exception.message, Toast.LENGTH_SHORT).show()
-            }
-
-            override fun showLog(logStr: String) {}
-        })
+        startActivity(Intent(this@MainActivity, DataActivity::class.java))
+//        // 开始链接
+//        val bean = ParamBean(ipStr, nameStr, pwdStr, topicStr, clientStr)
+//        MqttHelper.get().connect(this, bean, object : ViMqttCallBack {
+//            override fun onSuccess() {
+//                Toast.makeText(this@MainActivity, "链接成功", Toast.LENGTH_SHORT).show()
+//                startActivity(Intent(this@MainActivity, DataActivity::class.java))
+//            }
+//
+//            override fun onFailure(exception: Throwable) {
+//                Toast.makeText(this@MainActivity, exception.message, Toast.LENGTH_SHORT).show()
+//            }
+//
+//            override fun showLog(logStr: String) {}
+//        })
     }
 
 }

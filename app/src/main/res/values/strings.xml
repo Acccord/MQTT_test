@@ -8,4 +8,12 @@
     <string name="text_client">Client ID</string>
     <string name="text_connect">Connect</string>
     <string name="text_disconnect">Disconnect</string>
+    <string name="text_send">发送</string>
+    <string name="text_add">添加</string>
+    <string name="text_choose">选择</string>
+
+    <string name="title_send">数据发送</string>
+    <string name="title_receive">数据接收</string>
+
+    <string name="hint_input">Please input …</string>
 </resources>
