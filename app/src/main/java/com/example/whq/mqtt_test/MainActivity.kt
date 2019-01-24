@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        if (!ipStr.contains(".") && !ipStr.contains(":")) {
+        if (!ipStr.contains(".") || !ipStr.contains(":")) {
             mTvIP.error = "请输入正确的IP和端口号"
             return
         }
