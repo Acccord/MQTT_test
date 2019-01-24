@@ -1,9 +1,12 @@
 package com.example.whq.mqtt_test
 
+import android.annotation.SuppressLint
 import android.content.Context
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * MQTT帮助类
@@ -34,8 +37,8 @@ class MqttHelper private constructor() {
         }
     }
 
-    fun connect(context: Context, bean: ParamBean, mqttCallBack: ViMqttCallBack) {
-        this.mMqttCallBack = mqttCallBack
+    fun connect(context: Context, bean: ParamBean, listener: IMqttActionListener) {//mqttCallBack: ViMqttCallBack
+//        this.mMqttCallBack = mqttCallBack
         SERVICETOPIC = bean.topic
         mqttAndroidClient = MqttAndroidClient(context, bean.ip, bean.client, MemoryPersistence())
 
@@ -54,46 +57,51 @@ class MqttHelper private constructor() {
         //options.setAutomaticReconnect(true);
         // 设置MQTT监听并且接受消息
         mqttAndroidClient.setCallback(object : MqttCallback {
-            override fun connectionLost(cause: Throwable) {
+            override fun connectionLost(cause: Throwable?) {
                 //mMqttCallBack?.connectionLost(cause)
-                mMqttCallBack?.showLog("【MQTT】失去连接$cause")
+                mMqttCallBack?.showLog(createLog("失去连接$cause"))
             }
 
             @Throws(Exception::class)
             override fun messageArrived(topic: String, message: MqttMessage) {
                 val data = String(message.payload)
                 //mMqttCallBack?.messageArrived(topic, message)
-                mMqttCallBack?.showLog("【MQTT】接收->$data")
+                mMqttCallBack?.showLog(createLog("#51b555", "接收->$data"))
+
             }
 
-            override fun deliveryComplete(token: IMqttDeliveryToken) {
+            override fun deliveryComplete(token: IMqttDeliveryToken?) {
                 //mMqttCallBack?.deliveryComplete(token)
-                mMqttCallBack?.showLog("【MQTT】发送成功")
+                mMqttCallBack?.showLog(createLog("发送成功"))
             }
         })
 
         // 开始链接
         mqttAndroidClient.connect(options, this, object : IMqttActionListener {
-            override fun onSuccess(asyncActionToken: IMqttToken) {
-                mMqttCallBack?.onSuccess()
-                mMqttCallBack?.showLog("【MQTT】连接成功")
+            override fun onSuccess(asyncActionToken: IMqttToken?) {
+                mMqttCallBack?.showLog(createLog("连接成功"))
 
                 // 订阅client话题
                 mqttAndroidClient.subscribe(bean.client, 1)
+                listener.onSuccess(asyncActionToken)
             }
 
-            override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
-                mMqttCallBack?.onFailure(exception)
-                mMqttCallBack?.showLog("【MQTT】连接失败 error:$exception")
+            override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                mMqttCallBack?.showLog(createLog("连接失败 error:$exception"))
+                listener.onFailure(asyncActionToken, exception)
             }
         })
+    }
+
+    fun addCallBack(mqttCallBack: ViMqttCallBack) {
+        this.mMqttCallBack = mqttCallBack
     }
 
     /**
      * 断开服务器链接
      */
     fun disConnect() {
-        mMqttCallBack?.showLog("【MQTT】断开链接")
+        mMqttCallBack?.showLog(createLog("断开链接"))
 
         mqttAndroidClient.disconnect()
     }
@@ -104,7 +112,7 @@ class MqttHelper private constructor() {
      * @param msg 消息内容
      */
     fun publish(msg: String) {
-        mMqttCallBack?.showLog("【MQTT】发送>>>>>>$msg")
+        mMqttCallBack?.showLog(createLog("#43adff", "发送>>>>>>$msg"))
 
         val mqttMessage = MqttMessage()
         mqttMessage.payload = msg.toByteArray()
@@ -113,16 +121,26 @@ class MqttHelper private constructor() {
         mqttMessage.qos = 0
         mqttAndroidClient.publish(SERVICETOPIC, mqttMessage)
     }
+
+    fun createLog(dataStr: String): String {
+        return createLog("#dddddd", dataStr)
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun createLog(color: String, dataStr: String): String {
+        val df = SimpleDateFormat("HH:mm:ss")
+        return "<font color=$color>[${df.format(Date())}]【MQTT】$dataStr<font/>"
+    }
 }
 
 interface ViMqttCallBack {
 
-    // MQTT连接成功
-    fun onSuccess()
-
-    // MQTT连接失败
-    fun onFailure(exception: Throwable)
-
+//    // MQTT连接成功
+//    fun onSuccess()
+//
+//    // MQTT连接失败
+//    fun onFailure(exception: Throwable)
+//
 //    // MQTT失去连接
 //    fun connectionLost(cause: Throwable)
 //

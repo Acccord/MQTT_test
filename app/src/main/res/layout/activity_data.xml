@@ -36,16 +36,17 @@
 
     <EditText
             android:id="@+id/mEtInput"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="88dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:gravity="top|start"
             android:hint="@string/hint_input"
-            android:inputType="text"
             android:lines="3"
             android:textColor="@color/black"
             android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mTvTitleSend"/>
 
     <Button
@@ -57,6 +58,7 @@
             android:layout_marginEnd="16dp"
             android:text="@string/text_choose"
             android:textStyle="bold"
+            android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@+id/mBtnAdd"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mEtInput"/>
@@ -68,6 +70,7 @@
             android:layout_height="wrap_content"
             android:text="@string/text_add"
             android:textStyle="bold"
+            android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@+id/mBtnSend"
             app:layout_constraintStart_toEndOf="@+id/mBtnChoose"
             app:layout_constraintTop_toBottomOf="@+id/mEtInput"/>
@@ -97,6 +100,18 @@
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mBtnSend"/>
+
+    <TextView
+            android:id="@+id/mTvClear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:text="@string/text_clear"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/mTvTitleRec"
+            app:layout_constraintBottom_toBottomOf="@+id/mTvTitleRec"/>
 
     <ScrollView
             android:id="@+id/mScrollView"

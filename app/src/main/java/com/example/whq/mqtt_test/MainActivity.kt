@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+import org.eclipse.paho.client.mqttv3.IMqttActionListener
+import org.eclipse.paho.client.mqttv3.IMqttToken
 
 
 /**
@@ -64,21 +66,21 @@ class MainActivity : AppCompatActivity() {
         editor?.putString("client", clientStr)
         editor?.apply()
 
-        startActivity(Intent(this@MainActivity, DataActivity::class.java))
-//        // 开始链接
-//        val bean = ParamBean(ipStr, nameStr, pwdStr, topicStr, clientStr)
-//        MqttHelper.get().connect(this, bean, object : ViMqttCallBack {
-//            override fun onSuccess() {
-//                Toast.makeText(this@MainActivity, "链接成功", Toast.LENGTH_SHORT).show()
-//                startActivity(Intent(this@MainActivity, DataActivity::class.java))
-//            }
-//
-//            override fun onFailure(exception: Throwable) {
-//                Toast.makeText(this@MainActivity, exception.message, Toast.LENGTH_SHORT).show()
-//            }
-//
-//            override fun showLog(logStr: String) {}
-//        })
+        // 开始链接
+        val bean = ParamBean(ipStr, nameStr, pwdStr, topicStr, clientStr)
+        MqttHelper.get().connect(this, bean, object : IMqttActionListener {
+            override fun onSuccess(asyncActionToken: IMqttToken?) {
+                println("连接成功")
+                //连接成功
+                startActivity(Intent(this@MainActivity, DataActivity::class.java))
+            }
+
+            override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                println("连接失败")
+                //连接失败
+                Toast.makeText(this@MainActivity, exception?.message, Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
 }
